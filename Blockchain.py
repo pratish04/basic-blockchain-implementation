@@ -31,17 +31,17 @@ class Blockchain:
             cursor.execute(query, values)
             cnx.commit()
 
-        self.chain.append(genesis_block) #append it to our chain
+        # self.chain.append(genesis_block) #append it to our chain
         self.chain_fetch()
 
     def chain_fetch(self):
-        self.result=[]
+        self.chain=[]
         #fetch records from the database;
         query="SELECT * FROM transactions ORDER BY transactionId"
         cursor.execute(query)
         records=cursor.fetchall()
         for record in records:
-            self.result.append({
+            self.chain.append({
                 "user": record[1],
                 "v_file": record[2],
                 "file_data": record[3],
@@ -54,11 +54,11 @@ class Blockchain:
     def add_block(self, block, hashl):
 
         # prev_hash = self.last_block().hash
-        prev_hash=self.result[len(self.result)-1]["hash"]
+        prev_hash=self.chain[len(self.chain)-1]["hash"]
         #check the validity of the block
         if (prev_hash == block.prev_hash and self.is_valid(block, hashl)):
             block.hash = hashl
-            self.chain.append(block)
+            # self.chain.append(block)
             for trans in block.transactions:
                 # print(trans, block.index, block.hash, '\n')
                 query="INSERT INTO transactions (user, v_file, file_data, file_size, `index`, hash) VALUES (%s, %s, %s, %s, %s, %s)"
@@ -77,7 +77,7 @@ class Blockchain:
     # will add the block to the chain. This method is wrapper for verifying, validating and adding the block. Will take all pending transactions and create and append the blocks to our chain
     def mine(self):
         if(len(self.pending) > 0): #if there is atleast one pending transaction
-            last_block=self.result[len(self.result)-1]
+            last_block=self.chain[len(self.chain)-1]
             # Creates a new block to be added to the chain
             new_block=Block(last_block["index"]+1, self.pending, last_block["hash"])
             # runs the our proof of work and gets the consensus. There are 2 different types of p_o_w implemented below. Replace the method name to try another one(p_o_w_2(new_block))
@@ -140,5 +140,5 @@ class Blockchain:
             return False
 
     # Returns the last Block in the Blockchain
-    def last_block(self):
-        return self.chain[-1]
+    # def last_block(self):
+    #     return self.chain[-1]

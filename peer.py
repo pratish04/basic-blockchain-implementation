@@ -29,17 +29,11 @@ def new_transaction():
 @app.route("/chain", methods=["GET"])
 def get_chain():
     # consensus()
-    chain = []
-    #create a new chain from our blockchain
-    
-    for block in blockchain.chain:
-        chain.append(block.__dict__)
-
     blockchain.chain_fetch()
-    mychain=blockchain.result
+    chain=blockchain.chain
 
     print("Chain Len: {0}".format(len(chain)))
-    return json.dumps({"length" : len(chain), "chain" : chain, "mychain": mychain})
+    return json.dumps({"length" : len(chain), "chain" : chain})
         
 
 @app.route("/mine", methods=["GET"])

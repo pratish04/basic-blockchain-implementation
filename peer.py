@@ -9,7 +9,7 @@ app = Flask(__name__)
 #blockchain object
 blockchain = Blockchain()
 #peers list
-peers = []
+peers = [] 
 
 @app.route("/new_transaction", methods=["POST"])
 # new transaction added to the block. When user selects to submit new request
@@ -22,6 +22,7 @@ def new_transaction():
             return "Transaction does not have valid fields!", 404
     #else append it to pending transaction
     blockchain.add_pending(file_data)
+    print(" /new_transaction: ", file_data)
     return "Success", 201
 
 #gets the whole chain to user if not already displayed
@@ -30,11 +31,16 @@ def get_chain():
     # consensus()
     chain = []
     #create a new chain from our blockchain
+    
     for block in blockchain.chain:
         chain.append(block.__dict__)
-    #print chain len
+
+    blockchain.chain_fetch()
+    mychain=blockchain.result
+    mychain.pop(0)
+
     print("Chain Len: {0}".format(len(chain)))
-    return json.dumps({"length" : len(chain), "chain" : chain})
+    return json.dumps({"length" : len(chain), "chain" : chain, "mychain": mychain})
         
 
 @app.route("/mine", methods=["GET"])
@@ -69,4 +75,4 @@ def validate_and_add_block():
         return "The Block was discarded by the node.", 400
     return "The block was added to the chain.", 201
 #run the app
-app.run(port=8800, debug=True)
+app.run(host="localhost", port=8800, debug=True)

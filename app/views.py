@@ -14,7 +14,7 @@ files = {}
 UPLOAD_FOLDER = "app/static/Uploads"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # store  address
-ADDR = "http://127.0.0.1:8800"
+ADDR = "http://localhost:8800"
 
 
 #create a list of requests that peers has send to upload files
@@ -22,15 +22,23 @@ def get_tx_req():
     global request_tx
     chain_addr = "{0}/chain".format(ADDR)
     resp = requests.get(chain_addr)
+
     if resp.status_code == 200:
         content = []
+        qwer=[]
         chain = json.loads(resp.content.decode())
-        for block in chain["chain"]:
-            for trans in block["transactions"]:
-                trans["index"] = block["index"]
-                trans["hash"] = block["prev_hash"]
-                content.append(trans)
+        print("CHAINCHAINCHAIN: ", chain)
+        # for block in chain["chain"]:
+        #     for trans in block["transactions"]:
+        #         trans["index"] = block["index"]
+        #         trans["hash"] = block["prev_hash"]
+        #         content.append(trans)
+        content=chain["mychain"]
+        # print("CONTENT CONTENT: ", content)
+        # print("ASFKASKFJ ALSKDFJLAKSJF: ", qwer)
+
         request_tx = sorted(content,key=lambda k: k["hash"],reverse=True)
+        print("content get_tx_req: ", content)
 
 
 # Loads and runs the home page
@@ -63,6 +71,7 @@ def submit():
    
     # Submit a new transaction
     address = "{0}/new_transaction".format(ADDR)
+    print("upload /submit: ", post_object)
     requests.post(address, json=post_object)
     end = timer()
     print(end - start)

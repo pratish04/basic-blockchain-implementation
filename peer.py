@@ -37,7 +37,6 @@ def get_chain():
 
     blockchain.chain_fetch()
     mychain=blockchain.result
-    mychain.pop(0)
 
     print("Chain Len: {0}".format(len(chain)))
     return json.dumps({"length" : len(chain), "chain" : chain, "mychain": mychain})

@@ -28,18 +28,10 @@ def get_tx_req():
         qwer=[]
         chain = json.loads(resp.content.decode())
         print("CHAINCHAINCHAIN: ", chain)
-        # for block in chain["chain"]:
-        #     for trans in block["transactions"]:
-        #         trans["index"] = block["index"]
-        #         trans["hash"] = block["prev_hash"]
-        #         content.append(trans)
         content=chain["mychain"]
-        # print("CONTENT CONTENT: ", content)
-        # print("ASFKASKFJ ALSKDFJLAKSJF: ", qwer)
-
+        content.pop(0)
         request_tx = sorted(content,key=lambda k: k["hash"],reverse=True)
         print("content get_tx_req: ", content)
-
 
 # Loads and runs the home page
 @app.route("/")

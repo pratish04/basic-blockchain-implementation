@@ -18,23 +18,12 @@ class Blockchain:
         genesis_block = Block(0, [], "0") #create a new intital block 
         genesis_block.hash = genesis_block.generate_hash() #generate hash for that block
         self.result=[]
-        print("||||||||||||||||||||||||||||||||||||||||||||||||||||")
-        #do this only if the chain is empty
         
-
-        #query = "SELECT COUNT(*) FROM your_table"
-        # Execute the query
-        #cursor.execute(query)
-        # Fetch the result
-        #result = cursor.fetchone()
-        #if result==0, perform the following task
-
-        print("GENESIS BLOCK: ",genesis_block.index, genesis_block.hash)
-
         query="SELECT COUNT(*) FROM transactions"
         cursor.execute(query)
         result=cursor.fetchone()
-        # print("RESULTTTTTT: ", result[0])
+        
+        #do this only if the chain is empty
         #added genesis block to the database when no records found the way it is appended in the chain
         if result[0]==0:
             query="INSERT INTO transactions (`index`, hash) VALUES (%s, %s)"
@@ -80,9 +69,6 @@ class Blockchain:
                         block.index, block.hash,)
                 cursor.execute(query, values)
             cnx.commit()
-
-            # print("chain add_block: ", block.__dict__)
-            # print("chain here: ", self.chain)
             return True
         else:
             return False
@@ -92,10 +78,7 @@ class Blockchain:
     def mine(self):
         if(len(self.pending) > 0): #if there is atleast one pending transaction
             last_block=self.result[len(self.result)-1]
-            print(last_block)
-            # last_block = self.last_block() #get last block
             # Creates a new block to be added to the chain
-            # new_block = Block(last_block.index + 1,self.pending,last_block.hash)
             new_block=Block(last_block["index"]+1, self.pending, last_block["hash"])
             # runs the our proof of work and gets the consensus. There are 2 different types of p_o_w implemented below. Replace the method name to try another one(p_o_w_2(new_block))
             hashl = self.p_o_w(new_block)

@@ -17,7 +17,6 @@ class Blockchain:
         self.chain = [] # blockchain
         genesis_block = Block(0, [], "0") #create a new intital block 
         genesis_block.hash = genesis_block.generate_hash() #generate hash for that block
-        self.result=[]
         
         query="SELECT COUNT(*) FROM transactions"
         cursor.execute(query)

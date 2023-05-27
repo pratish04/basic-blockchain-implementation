@@ -32,8 +32,8 @@ def get_chain():
     blockchain.chain_fetch()
     chain=blockchain.chain
 
-    print("Chain Len: {0}".format(len(chain)))
-    return json.dumps({"length" : len(chain), "chain" : chain})
+    print("Chain Len: {0}".format(chain[len(chain)-1]["index"]))
+    return json.dumps({"length" : chain[len(chain)-1]["index"], "chain" : chain})
         
 
 @app.route("/mine", methods=["GET"])
